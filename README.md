@@ -47,3 +47,7 @@ iOS 和 Mac 的下载地址在 `src/components/download.astro`。二维码在构
 - Mac：`#`
 
 换成真实的 App Store 链接和 Mac 安装包地址后，重新构建即可。
+
+## 发布
+
+站点发布在 [https://hejtao.github.io/lob-site/](https://hejtao.github.io/lob-site/)。推送到 `main` 后，GitHub Actions 会自动构建并发布。
