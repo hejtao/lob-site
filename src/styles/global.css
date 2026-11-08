@@ -1,7 +1,5 @@
 @import 'tailwindcss';
 
-@plugin '@tailwindcss/typography';
-
 @theme {
   --font-sans:
     Bricolage Grotesque Variable, Inter Variable, Inter, ui-sans-serif,
@@ -18,6 +16,10 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   *,
   ::after,
   ::before,

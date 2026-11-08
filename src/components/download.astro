@@ -1,0 +1,88 @@
+---
+import QRCode from "qrcode";
+// @ts-ignore
+import { Icon } from "astro-icon/components";
+
+const iosDownloadUrl = "https://apps.apple.com";
+const macDownloadUrl = "#";
+const qrSvg = await QRCode.toString(iosDownloadUrl, {
+  type: "svg",
+  margin: 0,
+  color: { dark: "#111111", light: "#ffffff" },
+});
+---
+
+<section id="download" class="mt-24 scroll-mt-8 bg-[#ffc147] py-16 md:py-20">
+  <div class="mx-auto max-w-4xl px-4 text-center">
+    <p class="inline-flex rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[#ffc147]">
+      Download
+    </p>
+    <h2 class="mt-6 text-4xl font-bold leading-tight tracking-tight text-black sm:text-5xl lg:text-6xl">
+      Get Lob on your iPhone<br class="hidden sm:block" /> and your Mac.
+    </h2>
+    <p class="mt-4 text-base font-medium text-black sm:text-lg">
+      Scan the QR code or click below to download Lob.
+    </p>
+  </div>
+  <div class="mt-12 grid items-start gap-8 sm:grid-cols-2 max-w-3xl mx-auto">
+    <div class="mx-auto flex w-full max-w-[300px] flex-col rounded-[22px] bg-white px-4 pb-4 pt-6 text-black">
+      <div class="flex items-center justify-center gap-2.5">
+        <Icon name="simple-icons:apple" class="h-[22px] w-[22px]" />
+        <span class="text-[22px] font-semibold leading-none tracking-tight">iOS</span>
+      </div>
+      <div class="mt-5 rounded-2xl border border-[#e6e6e8] bg-white px-4 pb-4 pt-5 text-center">
+        <p class="text-[15px] font-medium leading-snug text-[#484851]">
+          Scan with your iPhone<br />to install Lob
+        </p>
+        <div
+          class="mx-auto mt-4 w-40 [&>svg]:block [&>svg]:h-auto [&>svg]:w-full"
+          set:html={qrSvg}
+        />
+      </div>
+      <a
+        href={iosDownloadUrl}
+        class="mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#171719] text-[15px] font-medium text-white transition hover:bg-black">
+        Download on the App Store
+        <svg
+          class="h-3.5 w-3.5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          aria-hidden="true">
+          <path d="M7 17 17 7" stroke-linecap="round"></path>
+          <path d="M9 7h8v8" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
+    </div>
+    <div class="mx-auto flex w-full max-w-[300px] flex-col rounded-[22px] bg-white px-4 pb-4 pt-6 text-black">
+      <div class="flex items-center justify-center gap-2.5">
+        <Icon name="simple-icons:apple" class="h-[22px] w-[22px]" />
+        <span class="text-[22px] font-semibold leading-none tracking-tight">Mac</span>
+      </div>
+      <div class="mt-5 rounded-2xl border border-[#e6e6e8] bg-white px-4 py-5 text-center">
+        <p class="text-[15px] font-medium leading-snug text-[#484851]">
+          Install it on your Mac and leave it running in the menu bar.
+        </p>
+      </div>
+      <a
+        href={macDownloadUrl}
+        class="mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#171719] text-[15px] font-medium text-white transition hover:bg-black">
+        Download for Mac
+        <svg
+          class="h-3.5 w-3.5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          aria-hidden="true">
+          <path d="M12 4v11" stroke-linecap="round"></path>
+          <path d="m7 11 5 5 5-5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+  <p class="mt-12 text-center text-sm text-black/70">
+    Copyright © {new Date().getFullYear()} Lob. All rights reserved.
+  </p>
+</section>
