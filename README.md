@@ -29,13 +29,14 @@ yarn dev
 
 ## 页面
 
-首页由三块组成：
+首页由四块组成：
 
 - Hero：产品介绍和主图
+- About：产品说明
 - Features：六条功能说明
 - Download：iOS 二维码、Mac 下载按钮和版权信息
 
-页头的 About、Features、Download 分别跳到页顶、`#features` 和 `#download`。
+页头的 About、Features、Download 分别跳到 `#about`、`#features` 和 `#download`。
 
 ## 下载地址
 
