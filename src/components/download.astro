@@ -83,6 +83,10 @@ const qrSvg = await QRCode.toString(iosDownloadUrl, {
     </div>
   </div>
   <p class="mt-12 text-center text-sm text-black/70">
-    Copyright © {new Date().getFullYear()} Lob. All rights reserved.
+    Copyright © <span id="copyright-year">{new Date().getFullYear()}</span> Lob. All rights reserved.
   </p>
+  <script>
+    const year = document.getElementById("copyright-year");
+    if (year) year.textContent = String(new Date().getFullYear());
+  </script>
 </section>

@@ -6,38 +6,50 @@ const features = [
   {
     title: "Your iPhone is the microphone",
     description:
-      "Use the iPhone you already have as the microphone. You do not need to buy another microphone for your Mac.",
+      "The iPhone you already have is the microphone. No need to buy another one for your Mac.",
     icon: "bx:bxs-microphone",
   },
   {
-    title: "Reuse voice input tool you already have",
+    title: "Keep the voice input you already use",
     description:
-      "Dictate with the voice tools already on your iPhone, including the built-in one. Lob sends that text to your Mac, so you do not need a new voice input tool.",
+      "Dictate with the voice input already on your iPhone, including the built-in one. Lob only sends that text to your Mac.",
     icon: "bx:bxs-user-voice",
   },
   {
     title: "Typed at the Mac cursor",
     description:
-      "Lob types the text into whichever field is focused on your Mac, the same way a keyboard would.",
+      "Lob types into the field that's focused on your Mac, just like a keyboard. Stay in the AI app you already have open.",
     icon: "bx:bxs-keyboard",
   },
   {
     title: "No copy, AirDrop, or Notes",
     description:
-      "Skip the extra step. The words go from the phone straight into the Mac field, with nothing to copy or paste.",
+      "The words go straight from your iPhone into the Mac field. Skip the copy, the AirDrop, and the stop in Notes.",
     icon: "bx:bxs-paste",
   },
   {
     title: "Connected over Bluetooth",
     description:
-      "After the apps are installed, the iPhone and Mac talk over Bluetooth. Unplug the cable and keep sending.",
+      "Once both apps are installed, your iPhone and Mac talk over Bluetooth. No cable to leave plugged in.",
     icon: "bx:bluetooth",
   },
   {
-    title: "Return when you want to submit",
+    title: "Press Return when you want to send",
     description:
-      "Turn on Press Return if the Mac field should submit after the text arrives, such as a terminal or a chat box.",
+      "Turn on Press Return if the field should submit after the text arrives, such as a terminal or a chat box.",
     icon: "bx:bxs-terminal",
+  },
+  {
+    title: "Text Shortcuts",
+    description:
+      "A shortcut runs as soon as its trigger appears in the text. Add as many as you need.",
+    icon: "bx:command",
+    commands: [
+      { name: "Newline", detail: "inserts a line break." },
+      { name: "Clear", detail: "removes the trigger and everything before it." },
+      { name: "Send", detail: "taps the Send button, which sends the message and clears the box." },
+      { name: "Replace", detail: "swaps the trigger for the text you enter." },
+    ],
   },
 ];
 ---
@@ -61,6 +73,17 @@ const features = [
         <div>
           <h3 class="font-semibold text-lg">{item.title}</h3>{" "}
           <p class="text-slate-500 mt-2 leading-relaxed">{item.description}</p>
+          {
+            item.commands && (
+              <ul class="mt-2 list-disc space-y-1 pl-4 text-slate-500 leading-relaxed">
+                {item.commands.map((command) => (
+                  <li>
+                    <span class="font-medium text-slate-700">{command.name}</span> {command.detail}
+                  </li>
+                ))}
+              </ul>
+            )
+          }
         </div>
       </div>
     ))
