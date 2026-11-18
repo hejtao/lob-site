@@ -4,7 +4,8 @@ import QRCode from "qrcode";
 import { Icon } from "astro-icon/components";
 
 const iosDownloadUrl = "https://apps.apple.com";
-const macDownloadUrl = `${import.meta.env.BASE_URL}downloads/Lob-1.0.0-macOS-universal.zip`;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const macDownloadUrl = `${base}/downloads/Lob-1.0.0-macOS-universal.zip`;
 const qrSvg = await QRCode.toString(iosDownloadUrl, {
   type: "svg",
   margin: 0,
