@@ -42,12 +42,9 @@ yarn dev
 
 iOS 和 Mac 的下载地址在 `src/components/download.astro`。二维码在构建时根据 iOS 地址生成。
 
-目前两处都是占位：
+iOS 仍是占位：`https://apps.apple.com`。换成真实的 App Store 链接后，重新构建即可。
 
-- iOS：`https://apps.apple.com`
-- Mac：`#`
-
-换成真实的 App Store 链接和 Mac 安装包地址后，重新构建即可。
+Mac 安装包是 `public/downloads/Lob-1.0.0-macOS-universal.zip`，下载按钮指向这个文件。
 
 ## 发布
 
