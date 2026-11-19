@@ -14,9 +14,10 @@ import heroVideo from "@/assets/lob.mp4";
       the AI app open on your Mac, right where the cursor is.
     </p>
   </div>
-  <div class="mt-10 md:mt-14">
+  <div class="mt-10 md:mt-14 overflow-hidden">
+    <!-- The right edge of a scaled video flashes a 1px line. Bleed 4px past the clip. -->
     <video
-      class="hero-video w-full h-auto bg-white"
+      class="hero-video block h-auto w-[calc(100%+4px)] max-w-none -mr-1 bg-white"
       width={poster.width}
       height={poster.height}
       poster={poster.src}
