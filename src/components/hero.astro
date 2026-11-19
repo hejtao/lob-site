@@ -1,6 +1,6 @@
 ---
-import { Picture } from "astro:assets";
-import heroImage from "@/assets/lob.webp";
+import poster from "@/assets/lob-poster.webp";
+import heroVideo from "@/assets/lob.mp4";
 ---
 
 <main class="flex flex-col pt-16 pb-8 md:pt-12 md:pb-24">
@@ -15,15 +15,36 @@ import heroImage from "@/assets/lob.webp";
     </p>
   </div>
   <div class="mt-10 md:mt-14">
-    <Picture
-      src={heroImage}
-      alt="Speaking on an iPhone to an AI app on a Mac"
-      widths={[640, 960, 1280, 1600, 1920, 2400]}
-      sizes="(min-width: 1320px) 1240px, 100vw"
-      loading="eager"
-      format="avif"
-      quality={90}
-      class="w-full h-auto"
-    />
+    <video
+      class="hero-video w-full h-auto bg-white"
+      width={poster.width}
+      height={poster.height}
+      poster={poster.src}
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      disableremoteplayback
+      aria-label="Speaking on an iPhone to an AI app on a Mac">
+      <source src={heroVideo} type="video/mp4" />
+    </video>
   </div>
 </main>
+
+<script>
+  const video = document.querySelector<HTMLVideoElement>(".hero-video");
+  if (video) {
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => {
+      if (motion.matches) {
+        video.pause();
+        video.currentTime = 0;
+        return;
+      }
+      video.muted = true;
+      void video.play().catch(() => {});
+    };
+    sync();
+    motion.addEventListener("change", sync);
+  }
+</script>
