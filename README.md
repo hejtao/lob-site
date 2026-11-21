@@ -44,7 +44,7 @@ iOS 和 Mac 的下载地址在 `src/components/download.astro`。二维码在构
 
 iOS 仍是占位：`https://apps.apple.com`。换成真实的 App Store 链接后，重新构建即可。
 
-Mac 安装包是 `public/downloads/Lob-1.0.0-macOS-universal.zip`，下载按钮指向这个文件。
+Mac 安装包是 `public/downloads/Lob-1.0.1-macOS-universal.zip`，下载按钮指向这个文件。
 
 ## 发布
 
