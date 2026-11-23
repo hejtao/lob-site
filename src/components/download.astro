@@ -85,6 +85,8 @@ const qrSvg = await QRCode.toString(iosDownloadUrl, {
     </div>
   </div>
   <p class="mt-12 text-center text-sm text-black/70">
+    <a href={`${base}/privacy/`} class="underline underline-offset-2 hover:text-black">Privacy</a>
+    <span class="mx-2" aria-hidden="true">·</span>
     Copyright © <span id="copyright-year">{new Date().getFullYear()}</span> Lob. All rights reserved.
   </p>
   <script>

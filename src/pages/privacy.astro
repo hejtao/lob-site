@@ -1,0 +1,25 @@
+---
+import Container from "@/components/container.astro";
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout
+  title="Privacy"
+  description="Lob has no accounts. Text you enter is sent only over Bluetooth to your own Mac, and is not uploaded to the developer's servers.">
+  <Container>
+    <article class="max-w-3xl pt-16 pb-24 md:pt-12">
+      <h1 class="text-4xl font-bold lg:text-5xl lg:tracking-tight">Privacy</h1>
+      <ul class="mt-8 list-disc space-y-4 pl-5 text-lg leading-relaxed text-slate-600">
+        <li>Lob has no accounts.</li>
+        <li>
+          Text you enter is sent only over Bluetooth to your own Mac. It is not
+          uploaded to the developer's servers.
+        </li>
+        <li>The camera is used only to scan the pairing code on your Mac.</li>
+        <li>Bluetooth is used only to connect to your own Mac.</li>
+        <li>Shortcuts are stored on this iPhone.</li>
+        <li>Purchases are handled by Apple.</li>
+      </ul>
+    </article>
+  </Container>
+</Layout>
