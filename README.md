@@ -48,4 +48,4 @@ The Mac installer is `public/downloads/Lob-1.0.1-macOS-universal.zip`, and the d
 
 ## Deploy
 
-The site is published at [https://hejtao.github.io/lob-site/](https://hejtao.github.io/lob-site/). Pushing to `main` triggers GitHub Actions to build and publish automatically.
+The site is published at [https://lob.hejtao.online/](https://lob.hejtao.online/). Pushing to `main` triggers GitHub Actions to build and publish automatically.

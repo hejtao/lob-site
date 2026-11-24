@@ -4,8 +4,8 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://hejtao.github.io",
-  base: process.env.GITHUB_ACTIONS ? "/lob-site" : "/",
+  site: "https://lob.hejtao.online",
+  base: "/",
   devToolbar: {
     enabled: false,
   },
