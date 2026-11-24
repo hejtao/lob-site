@@ -1,15 +1,15 @@
 # Lob
 
-Lob 的落地页。用 iPhone 上已有的语音输入说话，Lob 把文字打进 Mac 上当前聚焦的 AI 应用。
+Landing page for Lob. Speak with the voice input already on your iPhone, and Lob types the text into the AI app currently focused on your Mac.
 
-iPhone 和 Mac 两端都要安装才能使用。
+Install both the iPhone and Mac apps to use it.
 
-## 环境
+## Environment
 
-- Node.js 22.12 或更高版本
-- Yarn 4。项目使用 `nodeLinker: node-modules`，依赖安装在 `node_modules`
+- Node.js 22.12 or later
+- Yarn 4. The project uses `nodeLinker: node-modules`, so dependencies are installed in `node_modules`
 
-## 本地开发
+## Local development
 
 ```bash
 corepack enable
@@ -17,35 +17,35 @@ yarn install
 yarn dev
 ```
 
-开发服务器地址是 [http://localhost:4321](http://localhost:4321)。
+The dev server runs at [http://localhost:4321](http://localhost:4321).
 
-## 脚本
+## Scripts
 
-| 命令 | 作用 |
+| Command | What it does |
 | --- | --- |
-| `yarn dev` | 启动开发服务器 |
-| `yarn build` | 构建静态站点到 `dist/` |
-| `yarn preview` | 预览构建结果 |
+| `yarn dev` | Start the dev server |
+| `yarn build` | Build the static site into `dist/` |
+| `yarn preview` | Preview the build |
 
-## 页面
+## Pages
 
-首页由四块组成：
+The homepage has four sections:
 
-- Hero：产品介绍和主图
-- About：产品说明
-- Features：六条功能说明
-- Download：iOS 二维码、Mac 下载按钮和版权信息
+- Hero: product intro and main image
+- About: product description
+- Features: six feature descriptions
+- Download: iOS QR code, Mac download button, and copyright
 
-页头的 About、Features、Download 分别跳到 `#about`、`#features` 和 `#download`。
+About, Features, and Download in the header jump to `#about`, `#features`, and `#download`.
 
-## 下载地址
+## Download URLs
 
-iOS 和 Mac 的下载地址在 `src/components/download.astro`。二维码在构建时根据 iOS 地址生成。
+iOS and Mac download URLs live in `src/components/download.astro`. The QR code is generated at build time from the iOS URL.
 
-iOS 仍是占位：`https://apps.apple.com`。换成真实的 App Store 链接后，重新构建即可。
+The iOS URL is still a placeholder: `https://apps.apple.com`. Replace it with the real App Store link, then rebuild.
 
-Mac 安装包是 `public/downloads/Lob-1.0.1-macOS-universal.zip`，下载按钮指向这个文件。
+The Mac installer is `public/downloads/Lob-1.0.1-macOS-universal.zip`, and the download button points to that file.
 
-## 发布
+## Deploy
 
-站点发布在 [https://hejtao.github.io/lob-site/](https://hejtao.github.io/lob-site/)。推送到 `main` 后，GitHub Actions 会自动构建并发布。
+The site is published at [https://hejtao.github.io/lob-site/](https://hejtao.github.io/lob-site/). Pushing to `main` triggers GitHub Actions to build and publish automatically.
