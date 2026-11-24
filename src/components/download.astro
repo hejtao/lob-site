@@ -1,7 +1,10 @@
 ---
+import { Picture } from "astro:assets";
 import QRCode from "qrcode";
 // @ts-ignore
 import { Icon } from "astro-icon/components";
+import leftBottom from "@/assets/left-bottom.png";
+import rightBottom from "@/assets/right-bottom.png";
 import { getLocale, localePath, useTranslations } from "@/i18n";
 
 const locale = getLocale(Astro.url.pathname);
@@ -17,8 +20,42 @@ const qrSvg = await QRCode.toString(iosDownloadUrl, {
 const year = new Date().getFullYear();
 ---
 
-<section id="download" class="mt-24 scroll-mt-8 bg-[#ffc147] py-16 md:py-20">
-  <div class="mx-auto max-w-4xl px-4 text-center">
+<section id="download" class="relative mt-24 scroll-mt-8 overflow-hidden bg-[#ffc147] py-16 md:py-20">
+  <Picture
+    src={rightBottom}
+    alt=""
+    formats={["avif", "webp"]}
+    fallbackFormat="webp"
+    widths={[240, 360, 480, 720]}
+    sizes="(min-width: 1280px) 486px, calc(61.4vw - 276px)"
+    quality={72}
+    loading="lazy"
+    decoding="async"
+    pictureAttributes={{
+      class:
+        "pointer-events-none absolute right-0 bottom-0 z-0 hidden w-[max(7rem,min(486px,calc(61.4%-276px)))] select-none min-[1150px]:block",
+      "aria-hidden": "true",
+    }}
+    class="block h-auto w-full"
+  />
+  <Picture
+    src={leftBottom}
+    alt=""
+    formats={["avif", "webp"]}
+    fallbackFormat="webp"
+    widths={[240, 360, 480, 720]}
+    sizes="(min-width: 1280px) 260px, calc(50vw - 380px)"
+    quality={72}
+    loading="lazy"
+    decoding="async"
+    pictureAttributes={{
+      class:
+        "pointer-events-none absolute bottom-0 left-0 z-0 hidden w-[calc(50%-360px)] origin-bottom-left scale-[1.02] select-none min-[1150px]:block",
+      "aria-hidden": "true",
+    }}
+    class="block h-auto w-full"
+  />
+  <div class="relative z-20 mx-auto max-w-4xl px-4 text-center">
     <p class="inline-flex rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[#ffc147]">
       {t.download.eyebrow}
     </p>
@@ -29,13 +66,13 @@ const year = new Date().getFullYear();
       {t.download.subtitle}
     </p>
   </div>
-  <div class="mt-12 grid items-start gap-8 sm:grid-cols-2 max-w-3xl mx-auto">
+  <div class="relative z-20 mt-12 grid items-start gap-8 sm:grid-cols-2 max-w-3xl mx-auto">
     <div class="mx-auto flex w-full max-w-[300px] flex-col rounded-[22px] bg-white px-4 pb-4 pt-6 text-black">
-      <div class="flex items-center justify-center gap-2.5">
+      <div class="relative z-20 flex items-center justify-center gap-2.5">
         <Icon name="simple-icons:apple" class="h-[22px] w-[22px]" />
         <span class="text-[22px] font-semibold leading-none tracking-tight">iOS</span>
       </div>
-      <div class="mt-5 rounded-2xl border border-[#e6e6e8] bg-white px-4 pb-4 pt-5 text-center">
+      <div class="relative z-20 mt-5 rounded-2xl border border-[#e6e6e8] bg-white px-4 pb-4 pt-5 text-center">
         <p class="text-[15px] font-medium leading-snug text-[#484851]">
           {t.download.iosScanLine1}<br />{t.download.iosScanLine2}
         </p>
@@ -46,7 +83,7 @@ const year = new Date().getFullYear();
       </div>
       <a
         href={iosDownloadUrl}
-        class="mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#171719] text-[15px] font-medium text-white transition hover:bg-black">
+        class="relative z-20 mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#171719] text-[15px] font-medium text-white transition hover:bg-black">
         {t.download.appStore}
         <svg
           class="h-3.5 w-3.5"
@@ -61,11 +98,11 @@ const year = new Date().getFullYear();
       </a>
     </div>
     <div class="mx-auto flex w-full max-w-[300px] flex-col rounded-[22px] bg-white px-4 pb-4 pt-6 text-black">
-      <div class="flex items-center justify-center gap-2.5">
+      <div class="relative z-20 flex items-center justify-center gap-2.5">
         <Icon name="simple-icons:apple" class="h-[22px] w-[22px]" />
         <span class="text-[22px] font-semibold leading-none tracking-tight">Mac</span>
       </div>
-      <div class="mt-5 rounded-2xl border border-[#e6e6e8] bg-white px-4 py-5 text-center">
+      <div class="relative z-20 mt-5 rounded-2xl border border-[#e6e6e8] bg-white px-4 py-5 text-center">
         <p class="text-[15px] font-medium leading-snug text-[#484851]">
           {t.download.macHint}
         </p>
@@ -73,7 +110,7 @@ const year = new Date().getFullYear();
       <a
         href={macDownloadUrl}
         download="Lob-1.0.1-macOS-universal.zip"
-        class="mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#171719] text-[15px] font-medium text-white transition hover:bg-black">
+        class="relative z-20 mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#171719] text-[15px] font-medium text-white transition hover:bg-black">
         {t.download.macButton}
         <svg
           class="h-3.5 w-3.5"
@@ -88,7 +125,7 @@ const year = new Date().getFullYear();
       </a>
     </div>
   </div>
-  <p class="mt-12 text-center text-sm text-black/70">
+  <p class="relative z-20 mt-12 text-center text-sm text-black/70">
     <a href={localePath(locale, "/privacy")} class="underline underline-offset-2 hover:text-black">{t.download.privacy}</a>
     <span class="mx-2" aria-hidden="true">·</span>
     {t.download.copyrightBefore} <span id="copyright-year">{year}</span> {t.download.copyrightAfter}
