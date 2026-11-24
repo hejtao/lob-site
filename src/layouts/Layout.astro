@@ -2,40 +2,47 @@
 import { SEO } from "astro-seo";
 import Navbar from "@/components/navbar/navbar.astro";
 import favicon from "@/assets/icon.webp";
+import { getLocale, htmlLang, isLocalizedPath, localePath, useTranslations } from "@/i18n";
 import "@fontsource-variable/inter/index.css";
 import "@fontsource-variable/bricolage-grotesque";
 import "../styles/global.css";
 
 export interface Props {
-  title: string;
+  title?: string;
   description?: string;
 }
 
+const locale = getLocale(Astro.url.pathname);
+const t = useTranslations(locale);
+const lang = htmlLang(locale);
+
+const { title = "", description = t.meta.description } = Astro.props;
+
+const makeTitle = title ? `${title} | Lob` : t.meta.title;
 const canonicalURL = new URL(Astro.url.pathname, Astro.url.origin).toString();
-
-const {
-  title,
-  description = "Use the voice input already on your iPhone. Lob types what you say into the AI app open on your Mac, right where the cursor is.",
-} = Astro.props;
-
-const makeTitle = title
-  ? title + " | " + "Lob"
-  : "Lob — Speak on your iPhone. Talk to any AI app on your Mac.";
+const localized = isLocalizedPath(Astro.url.pathname);
+const enURL = new URL(localePath("en", Astro.url.pathname), Astro.url.origin).toString();
+const zhURL = new URL(localePath("zh", Astro.url.pathname), Astro.url.origin).toString();
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/webp" href={favicon.src} />
     <meta name="generator" content={Astro.generator} />
+    {
+      localized && (
+        <>
+          <link rel="alternate" hreflang="en" href={enURL} />
+          <link rel="alternate" hreflang="zh-CN" href={zhURL} />
+          <link rel="alternate" hreflang="x-default" href={enURL} />
+        </>
+      )
+    }
 
-    <SEO
-      title={makeTitle}
-      description={description}
-      canonical={canonicalURL}
-    />
+    <SEO title={makeTitle} description={description} canonical={canonicalURL} />
   </head>
   <body id="top">
     <Navbar />

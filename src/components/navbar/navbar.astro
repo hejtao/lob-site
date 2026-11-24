@@ -1,18 +1,22 @@
 ---
 import Container from "@/components/container.astro";
+import LanguageSwitch from "@/components/language-switch.astro";
 import Link from "@/components/ui/link.astro";
+import { getLocale, localeHash, localePath, useTranslations } from "@/i18n";
 import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
 import logoMark from "@/assets/icon.webp";
 
-const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const locale = getLocale(Astro.url.pathname);
+const t = useTranslations(locale);
+const home = localePath(locale, "/");
 const menuitems = [
   {
-    title: "About",
-    path: `${base}/#about`,
+    title: t.nav.about,
+    path: localeHash(locale, "about"),
   },
   {
-    title: "Features",
-    path: `${base}/#features`,
+    title: t.nav.features,
+    path: localeHash(locale, "features"),
   },
 ];
 ---
@@ -21,7 +25,7 @@ const menuitems = [
   <header class="flex flex-col lg:flex-row justify-between items-center my-5">
     <Astronav>
       <div class="flex w-full lg:w-auto items-center justify-between">
-        <a href={`${base}/`} class="flex items-center gap-2">
+        <a href={home} class="flex items-center gap-2">
           <img
             src={logoMark.src}
             width={logoMark.width}
@@ -31,10 +35,11 @@ const menuitems = [
           />
           <span class="flex flex-col leading-tight">
             <span class="font-sans text-lg font-bold tracking-tight text-black">Lob</span>
-            <span class="text-xs font-normal not-italic text-slate-500">Talk to your Mac easily</span>
+            <span class="text-xs font-normal not-italic text-slate-500">{t.nav.tagline}</span>
           </span>
         </a>
-        <div class="block lg:hidden">
+        <div class="flex items-center gap-3 lg:hidden">
+          <LanguageSwitch />
           <MenuIcon class="w-4 h-4 text-gray-800" />
         </div>
       </div>
@@ -47,11 +52,6 @@ const menuitems = [
                   href={item.path}
                   class="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900">
                   <span> {item.title}</span>
-                  {item.badge && (
-                    <span class="ml-1 px-2 py-0.5 text-[10px] animate-pulse font-semibold uppercase text-white bg-indigo-600 rounded-full">
-                      New
-                    </span>
-                  )}
                 </a>
               </li>
             ))
@@ -59,11 +59,11 @@ const menuitems = [
         </ul>
         <div class="lg:hidden flex items-center mt-3 gap-4">
           <Link
-            href={`${base}/#download`}
+            href={localeHash(locale, "download")}
             size="md"
             block
             class="inline-flex items-center justify-center gap-1.5 rounded-lg!">
-            Download
+            {t.nav.download}
             <svg
               class="w-6 h-6"
               viewBox="0 0 24 24"
@@ -83,8 +83,9 @@ const menuitems = [
     </Astronav>
     <div>
       <div class="hidden lg:flex items-center gap-4">
-        <Link href={`${base}/#download`} size="md" class="inline-flex items-center gap-1.5 rounded-lg!">
-          Download
+        <LanguageSwitch />
+        <Link href={localeHash(locale, "download")} size="md" class="inline-flex items-center gap-1.5 rounded-lg!">
+          {t.nav.download}
           <svg
             class="w-6 h-6"
             viewBox="0 0 24 24"

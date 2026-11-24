@@ -1,18 +1,31 @@
 ---
 import poster from "@/assets/lob-poster.webp";
 import heroVideo from "@/assets/lob.mp4";
+import { getLocale, useTranslations } from "@/i18n";
+
+const locale = getLocale(Astro.url.pathname);
+const t = useTranslations(locale);
 ---
 
 <main class="flex flex-col pt-16 pb-8 md:pt-12 md:pb-24">
   <div class="text-center">
     <h1
-      class="text-5xl lg:text-6xl xl:text-7xl font-bold lg:tracking-tight xl:tracking-tighter">
-      Speak on your iPhone. Talk to any AI app on your Mac.
+      class:list={[
+        "mx-auto max-w-5xl font-bold text-balance",
+        locale === "zh"
+          ? "text-4xl leading-tight sm:text-5xl lg:text-6xl"
+          : "text-5xl lg:text-6xl xl:text-7xl lg:tracking-tight xl:tracking-tighter",
+      ]}>
+      {
+        t.hero.lines.map((line, index) => (
+          <>
+            {index > 0 && <br class="sm:hidden" />}
+            {line}
+          </>
+        ))
+      }
     </h1>
-    <p class="text-lg mt-4 text-slate-600 max-w-xl mx-auto">
-      Use the voice input already on your iPhone. Lob types what you say into
-      the AI app open on your Mac, right where the cursor is.
-    </p>
+    <p class="text-lg mt-4 text-slate-600 max-w-xl mx-auto">{t.hero.body}</p>
   </div>
   <div class="mt-10 md:mt-14 overflow-hidden">
     <video
@@ -25,7 +38,7 @@ import heroVideo from "@/assets/lob.mp4";
       playsinline
       preload="metadata"
       disableremoteplayback
-      aria-label="Speaking on an iPhone to an AI app on a Mac">
+      aria-label={t.hero.videoLabel}>
       <source src={heroVideo} type="video/mp4" />
     </video>
   </div>

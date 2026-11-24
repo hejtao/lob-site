@@ -2,7 +2,10 @@
 import QRCode from "qrcode";
 // @ts-ignore
 import { Icon } from "astro-icon/components";
+import { getLocale, localePath, useTranslations } from "@/i18n";
 
+const locale = getLocale(Astro.url.pathname);
+const t = useTranslations(locale);
 const iosDownloadUrl = "https://apps.apple.com";
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const macDownloadUrl = `${base}/downloads/Lob-1.0.1-macOS-universal.zip`;
@@ -11,18 +14,19 @@ const qrSvg = await QRCode.toString(iosDownloadUrl, {
   margin: 0,
   color: { dark: "#111111", light: "#ffffff" },
 });
+const year = new Date().getFullYear();
 ---
 
 <section id="download" class="mt-24 scroll-mt-8 bg-[#ffc147] py-16 md:py-20">
   <div class="mx-auto max-w-4xl px-4 text-center">
     <p class="inline-flex rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-[#ffc147]">
-      Download
+      {t.download.eyebrow}
     </p>
-    <h2 class="mt-6 text-4xl font-bold leading-tight tracking-tight text-black sm:text-5xl lg:text-6xl">
-      Get Lob on your iPhone<br class="hidden sm:block" /> and your Mac.
+    <h2 class="mt-6 text-4xl font-bold leading-tight tracking-tight text-black text-balance sm:text-5xl lg:text-6xl">
+      {t.download.titleLine1}<br />{t.download.titleLine2}
     </h2>
     <p class="mt-4 text-base font-medium text-black sm:text-lg">
-      Scan the QR code or click below to download Lob.
+      {t.download.subtitle}
     </p>
   </div>
   <div class="mt-12 grid items-start gap-8 sm:grid-cols-2 max-w-3xl mx-auto">
@@ -33,7 +37,7 @@ const qrSvg = await QRCode.toString(iosDownloadUrl, {
       </div>
       <div class="mt-5 rounded-2xl border border-[#e6e6e8] bg-white px-4 pb-4 pt-5 text-center">
         <p class="text-[15px] font-medium leading-snug text-[#484851]">
-          Scan with your iPhone<br />to install Lob
+          {t.download.iosScanLine1}<br />{t.download.iosScanLine2}
         </p>
         <div
           class="mx-auto mt-4 w-40 [&>svg]:block [&>svg]:h-auto [&>svg]:w-full"
@@ -43,7 +47,7 @@ const qrSvg = await QRCode.toString(iosDownloadUrl, {
       <a
         href={iosDownloadUrl}
         class="mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#171719] text-[15px] font-medium text-white transition hover:bg-black">
-        Download on the App Store
+        {t.download.appStore}
         <svg
           class="h-3.5 w-3.5"
           viewBox="0 0 24 24"
@@ -63,14 +67,14 @@ const qrSvg = await QRCode.toString(iosDownloadUrl, {
       </div>
       <div class="mt-5 rounded-2xl border border-[#e6e6e8] bg-white px-4 py-5 text-center">
         <p class="text-[15px] font-medium leading-snug text-[#484851]">
-          Install it on your Mac and leave it running in the menu bar.
+          {t.download.macHint}
         </p>
       </div>
       <a
         href={macDownloadUrl}
         download="Lob-1.0.1-macOS-universal.zip"
         class="mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#171719] text-[15px] font-medium text-white transition hover:bg-black">
-        Download for Mac
+        {t.download.macButton}
         <svg
           class="h-3.5 w-3.5"
           viewBox="0 0 24 24"
@@ -85,9 +89,9 @@ const qrSvg = await QRCode.toString(iosDownloadUrl, {
     </div>
   </div>
   <p class="mt-12 text-center text-sm text-black/70">
-    <a href={`${base}/privacy/`} class="underline underline-offset-2 hover:text-black">Privacy</a>
+    <a href={localePath(locale, "/privacy")} class="underline underline-offset-2 hover:text-black">{t.download.privacy}</a>
     <span class="mx-2" aria-hidden="true">·</span>
-    Copyright © <span id="copyright-year">{new Date().getFullYear()}</span> Lob. All rights reserved.
+    {t.download.copyrightBefore} <span id="copyright-year">{year}</span> {t.download.copyrightAfter}
   </p>
   <script>
     const year = document.getElementById("copyright-year");

@@ -1,66 +1,31 @@
 ---
 // @ts-ignore
 import { Icon } from "astro-icon/components";
+import { getLocale, useTranslations } from "@/i18n";
 
-const features = [
-  {
-    title: "Your iPhone is the microphone",
-    description:
-      "The iPhone you already have is the microphone. No need to buy another one for your Mac.",
-    icon: "bx:bxs-microphone",
-  },
-  {
-    title: "Keep the voice input you already use",
-    description:
-      "Dictate with the voice input already on your iPhone, including the built-in one. Lob only sends that text to your Mac.",
-    icon: "bx:bxs-user-voice",
-  },
-  {
-    title: "Typed at the Mac cursor",
-    description:
-      "Lob types into the field that's focused on your Mac, just like a keyboard. Stay in the AI app you already have open.",
-    icon: "bx:bxs-keyboard",
-  },
-  {
-    title: "No copy, AirDrop, or Notes",
-    description:
-      "The words go straight from your iPhone into the Mac field. Skip the copy, the AirDrop, and the stop in Notes.",
-    icon: "bx:bxs-paste",
-  },
-  {
-    title: "Connected over Bluetooth",
-    description:
-      "Once both apps are installed, your iPhone and Mac talk over Bluetooth. No cable to leave plugged in.",
-    icon: "bx:bluetooth",
-  },
-  {
-    title: "Press Return on Mac",
-    description:
-      "Turn it on, and the Mac presses Return after the text is in the field. A terminal submits the line instead of starting a new one.",
-    icon: "bx:bxs-terminal",
-  },
-  {
-    title: "Text Shortcuts",
-    description:
-      "A shortcut runs as soon as you dictate its trigger.",
-    icon: "bx:command",
-    commands: [
-      { name: "Send", detail: "taps the Send button, which sends the message and clears the box." },
-      { name: "Clear", detail: "empties the input box." },
-      { name: "Delete", detail: "removes the number of characters you set, immediately before the trigger." },
-      { name: "Newline", detail: "inserts the number of line breaks you set." },
-      { name: "Replace", detail: "swaps the trigger for the text you enter." },
-    ],
-  },
+const t = useTranslations(getLocale(Astro.url.pathname));
+const icons = [
+  "bx:bxs-microphone",
+  "bx:bxs-user-voice",
+  "bx:bxs-keyboard",
+  "bx:bxs-paste",
+  "bx:bluetooth",
+  "bx:bxs-terminal",
+  "bx:command",
 ];
+
+const features = t.features.items.map((item, index) => ({
+  ...item,
+  icon: icons[index],
+}));
 ---
 
 <div id="features" class="mt-24 scroll-mt-8">
   <h2 class="text-4xl lg:text-5xl font-bold lg:tracking-tight">
-    Features
+    {t.features.title}
   </h2>
   <p class="text-lg mt-4 text-slate-600">
-    Use the voice input on your iPhone to talk to any AI app on your Mac.
+    {t.features.intro}
   </p>
 </div>
 

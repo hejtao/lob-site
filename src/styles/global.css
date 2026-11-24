@@ -20,6 +20,14 @@
     scroll-behavior: smooth;
   }
 
+  html[lang="zh-CN"] {
+    --font-sans:
+      "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Noto Sans CJK SC",
+      "Source Han Sans SC", "Microsoft YaHei", Inter Variable, ui-sans-serif,
+      system-ui, sans-serif;
+    line-break: strict;
+  }
+
   *,
   ::after,
   ::before,
