@@ -115,7 +115,9 @@ const t = useTranslations(locale);
 
 <style>
   .hero-video {
-    /* Keep Safari from re-positioning the video layer while the page scrolls. */
+    /* Keep Safari from re-positioning the video layer while the page scrolls.
+       The white border hides the layer's edge if it slips by a pixel. */
+    border: 1px solid #fff;
     transform: translateZ(0);
     backface-visibility: hidden;
   }
