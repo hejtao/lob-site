@@ -44,6 +44,8 @@ About, Features, and Download in the header jump to `#about`, `#features`, and `
 
 The hero script gives phones (≤767px) `lob-1280.mp4` and everything wider `lob.mp4`, so decode and download stay cheap on a phone. Nothing is fetched until the clip is on screen, and playback pauses when the tab is hidden, when the hero scrolls away, or when the visitor asked for reduced motion.
 
+The player draws the clip two pixels larger than its frame on every side and lets the frame clip the overhang. Chromium occasionally paints the trailing edge of a playing video layer black for one frame — mostly while scrolling or at some zoom levels — and keeping the clip's own edge out of the frame hides it. The picture has white margins, so the cropped pixels are invisible.
+
 The master has a 1px black line along its top and bottom edge. Cropping `7078:4316:0:2` drops the line (and one extra row, to keep the even height that yuv420p needs). Adjust the crop if a future recording is framed differently:
 
 ```bash

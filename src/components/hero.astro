@@ -28,9 +28,9 @@ const t = useTranslations(locale);
     </h1>
     <p class="text-lg mt-4 text-slate-600 max-w-xl mx-auto">{t.hero.body}</p>
   </div>
-  <div class="mt-10 md:mt-14 bg-white">
+  <div class="hero-frame mt-10 overflow-hidden bg-white md:mt-14">
     <video
-      class="hero-video block h-auto w-full bg-white object-cover"
+      class="hero-video block h-auto w-full max-w-none bg-white object-cover"
       src={heroVideo}
       data-src={heroVideo}
       data-src-mobile={heroVideoMobile}
@@ -67,9 +67,12 @@ const t = useTranslations(locale);
     let autoplayBlocked = false;
     let fallbackTried = false;
 
-    // Keep the video on whole-pixel dimensions. Safari composites video in its
-    // own layer, and a fractional height can expose the layer's black edge
-    // while the page is scrolling.
+    // Size the video a couple of pixels larger than its frame and let the
+    // frame clip the overhang. Chromium paints the trailing edge of a playing
+    // video layer black for a frame now and then (mostly while scrolling or at
+    // particular zoom levels); keeping the video's own edge outside the frame
+    // hides it. The clip has white margins, so the cropped pixels are invisible.
+    const BLEED = 2;
     const frame = video.parentElement;
     let fittedWidth = 0;
     const fitVideo = () => {
@@ -80,8 +83,9 @@ const t = useTranslations(locale);
       const attrWidth = Number(video.getAttribute("width")) || 2560;
       const attrHeight = Number(video.getAttribute("height")) || 1560;
       const ratio = attrHeight / attrWidth;
-      video.style.width = `${width}px`;
-      video.style.height = `${Math.round(width * ratio)}px`;
+      video.style.width = `${width + BLEED * 2}px`;
+      video.style.height = `${Math.round(width * ratio) + BLEED * 2}px`;
+      video.style.margin = `-${BLEED}px`;
     };
     fitVideo();
     if (frame && "ResizeObserver" in window) {
@@ -164,10 +168,15 @@ const t = useTranslations(locale);
 </script>
 
 <style>
+  .hero-frame {
+    /* Own compositing layer, so the video's overhang is clipped against the
+       frame on the GPU instead of leaking onto the page. */
+    transform: translateZ(0);
+  }
+
   .hero-video {
-    /* Keep Safari from re-positioning the video layer while the page scrolls.
-       The white border hides the layer's edge if it slips by a pixel. */
-    border: 1px solid #fff;
+    /* translateZ keeps Safari from re-positioning the video layer while the
+       page scrolls. */
     transform: translateZ(0);
     backface-visibility: hidden;
   }
