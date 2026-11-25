@@ -30,7 +30,7 @@ const t = useTranslations(locale);
   </div>
   <div class="hero-frame mt-10 overflow-hidden bg-white md:mt-14">
     <video
-      class="hero-video block h-auto w-full max-w-none bg-white object-cover"
+      class="hero-video block h-auto w-full max-w-none bg-white object-fill"
       src={heroVideo}
       data-src={heroVideo}
       data-src-mobile={heroVideoMobile}
@@ -71,7 +71,9 @@ const t = useTranslations(locale);
     // frame clip the overhang. Chromium paints the trailing edge of a playing
     // video layer black for a frame now and then (mostly while scrolling or at
     // particular zoom levels); keeping the video's own edge outside the frame
-    // hides it. The clip has white margins, so the cropped pixels are invisible.
+    // hides it. Only the right and bottom edges overhang: the leading edges
+    // stay where the recording put them, so nothing is cut off on the left.
+    // The clip is white / light grey along those edges, so the crop is invisible.
     const BLEED = 2;
     const frame = video.parentElement;
     let fittedWidth = 0;
@@ -83,9 +85,10 @@ const t = useTranslations(locale);
       const attrWidth = Number(video.getAttribute("width")) || 2560;
       const attrHeight = Number(video.getAttribute("height")) || 1560;
       const ratio = attrHeight / attrWidth;
-      video.style.width = `${width + BLEED * 2}px`;
-      video.style.height = `${Math.round(width * ratio) + BLEED * 2}px`;
-      video.style.margin = `-${BLEED}px`;
+      video.style.width = `${width + BLEED}px`;
+      video.style.height = `${Math.round(width * ratio) + BLEED}px`;
+      // top right bottom left
+      video.style.margin = `0 -${BLEED}px -${BLEED}px 0`;
     };
     fitVideo();
     if (frame && "ResizeObserver" in window) {
