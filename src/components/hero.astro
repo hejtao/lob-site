@@ -67,14 +67,11 @@ const t = useTranslations(locale);
     let autoplayBlocked = false;
     let fallbackTried = false;
 
-    // Size the video a couple of pixels larger than its frame and let the
-    // frame clip the overhang. Chromium paints the trailing edge of a playing
-    // video layer black for a frame now and then (mostly while scrolling or at
-    // particular zoom levels); keeping the video's own edge outside the frame
-    // hides it. Only the right and bottom edges overhang: the leading edges
-    // stay where the recording put them, so nothing is cut off on the left.
-    // The clip is white / light grey along those edges, so the crop is invisible.
-    const BLEED = 2;
+    // Give the video whole-pixel dimensions, so the frame and the clip agree
+    // on where the edges are. The frame paints a white ring over the clip's
+    // outermost pixels (see .hero-frame::after) to hide the black hairline
+    // Chromium and Safari can both paint at a video layer's edge, so nothing
+    // here needs to be cropped or scaled past the frame.
     const frame = video.parentElement;
     let fittedWidth = 0;
     const fitVideo = () => {
@@ -85,10 +82,8 @@ const t = useTranslations(locale);
       const attrWidth = Number(video.getAttribute("width")) || 2560;
       const attrHeight = Number(video.getAttribute("height")) || 1560;
       const ratio = attrHeight / attrWidth;
-      video.style.width = `${width + BLEED}px`;
-      video.style.height = `${Math.round(width * ratio) + BLEED}px`;
-      // top right bottom left
-      video.style.margin = `0 -${BLEED}px -${BLEED}px 0`;
+      video.style.width = `${width}px`;
+      video.style.height = `${Math.round(width * ratio)}px`;
     };
     fitVideo();
     if (frame && "ResizeObserver" in window) {
@@ -172,18 +167,29 @@ const t = useTranslations(locale);
 
 <style>
   .hero-frame {
-    /* Own compositing layer, so the video's overhang is clipped against the
-       frame on the GPU instead of leaking onto the page. */
+    position: relative;
+    /* Own compositing layer, so the video is clipped and masked on the GPU
+       instead of leaking onto the page. */
     transform: translateZ(0);
   }
 
+  .hero-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    /* A white ring over the clip's outermost pixels. Chromium paints the
+       trailing edge of a playing video layer black for a frame now and then,
+       and Safari paints the layer's edge black while scrolling; both land on
+       the outermost pixels, which the recording leaves white, so masking them
+       hides the hairline without cropping or shifting the picture. */
+    box-shadow: inset 0 0 0 2px #fff;
+  }
+
   .hero-video {
-    /* Safari composites video in its own layer, and that layer's edge can show
-       a black hairline while the page scrolls. The 1px white border paints
-       over the layer edge on the left and top; the right and bottom bleed
-       above keeps their edges outside the frame. Both are invisible against
-       the white page. translateZ keeps Safari from re-positioning the layer. */
-    border: 1px solid #fff;
+    /* translateZ keeps Safari from re-positioning the video layer while the
+       page scrolls. */
     transform: translateZ(0);
     backface-visibility: hidden;
   }
