@@ -178,8 +178,12 @@ const t = useTranslations(locale);
   }
 
   .hero-video {
-    /* translateZ keeps Safari from re-positioning the video layer while the
-       page scrolls. */
+    /* Safari composites video in its own layer, and that layer's edge can show
+       a black hairline while the page scrolls. The 1px white border paints
+       over the layer edge on the left and top; the right and bottom bleed
+       above keeps their edges outside the frame. Both are invisible against
+       the white page. translateZ keeps Safari from re-positioning the layer. */
+    border: 1px solid #fff;
     transform: translateZ(0);
     backface-visibility: hidden;
   }
