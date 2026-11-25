@@ -28,9 +28,9 @@ const t = useTranslations(locale);
     </h1>
     <p class="text-lg mt-4 text-slate-600 max-w-xl mx-auto">{t.hero.body}</p>
   </div>
-  <div class="mt-10 md:mt-14 overflow-hidden bg-white">
+  <div class="mt-10 md:mt-14 bg-white">
     <video
-      class="hero-video block h-auto w-[calc(100%+4px)] max-w-none -mr-1 bg-white object-cover"
+      class="hero-video block h-auto w-full bg-white object-cover"
       src={heroVideo}
       data-src={heroVideo}
       data-src-mobile={heroVideoMobile}
@@ -63,6 +63,28 @@ const t = useTranslations(locale);
       video.load();
     }
 
+    // Give the video whole-pixel dimensions. Safari composites video in its
+    // own layer, and a fractional height can expose the layer's black edge
+    // while the page is scrolling.
+    const frame = video.parentElement;
+    let fittedWidth = 0;
+    const fitVideo = () => {
+      if (!frame) return;
+      const width = frame.clientWidth;
+      if (!width || width === fittedWidth) return;
+      fittedWidth = width;
+      const attrWidth = Number(video.getAttribute("width")) || 2560;
+      const attrHeight = Number(video.getAttribute("height")) || 1560;
+      const ratio = attrHeight / attrWidth;
+      video.style.width = `${width}px`;
+      video.style.height = `${Math.round(width * ratio)}px`;
+    };
+    fitVideo();
+    if (frame && "ResizeObserver" in window) {
+      new ResizeObserver(fitVideo).observe(frame);
+    }
+    window.addEventListener("resize", fitVideo);
+
     let onScreen = true;
 
     const sync = () => {
@@ -90,3 +112,11 @@ const t = useTranslations(locale);
     sync();
   }
 </script>
+
+<style>
+  .hero-video {
+    /* Keep Safari from re-positioning the video layer while the page scrolls. */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+</style>
