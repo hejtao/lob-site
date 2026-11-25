@@ -12,6 +12,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# local scratch files (video masters, test encodes)
+.tmp-video/
+
 
 # environment variables
 .env

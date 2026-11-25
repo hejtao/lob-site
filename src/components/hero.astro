@@ -1,6 +1,7 @@
 ---
 import poster from "@/assets/lob-poster.webp";
 import heroVideo from "@/assets/lob.mp4";
+import heroVideoMobile from "@/assets/lob-1280.mp4";
 import { getLocale, useTranslations } from "@/i18n";
 
 const locale = getLocale(Astro.url.pathname);
@@ -27,19 +28,22 @@ const t = useTranslations(locale);
     </h1>
     <p class="text-lg mt-4 text-slate-600 max-w-xl mx-auto">{t.hero.body}</p>
   </div>
-  <div class="mt-10 md:mt-14 overflow-hidden">
+  <div class="mt-10 md:mt-14 overflow-hidden bg-white">
     <video
       class="hero-video block h-auto w-[calc(100%+4px)] max-w-none -mr-1 bg-white"
+      src={heroVideo}
+      data-src={heroVideo}
+      data-src-mobile={heroVideoMobile}
       width={poster.width}
       height={poster.height}
       poster={poster.src}
       muted
       loop
       playsinline
-      preload="metadata"
+      preload="none"
+      disablepictureinpicture
       disableremoteplayback
       aria-label={t.hero.videoLabel}>
-      <source src={heroVideo} type="video/mp4" />
     </video>
   </div>
 </main>
@@ -48,16 +52,41 @@ const t = useTranslations(locale);
   const video = document.querySelector<HTMLVideoElement>(".hero-video");
   if (video) {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    // Pick the source ourselves instead of relying on <source media>:
+    // Safari does not always honour the media attribute and would send the
+    // full-size clip to phones (or the phone clip to the desktop).
+    const smallScreen = window.matchMedia("(max-width: 767px)");
+    const preferredSrc = smallScreen.matches ? video.dataset.srcMobile : video.dataset.src;
+    if (preferredSrc && video.getAttribute("src") !== preferredSrc) {
+      video.src = preferredSrc;
+      video.load();
+    }
+
+    let onScreen = true;
+
     const sync = () => {
-      if (motion.matches) {
+      if (motion.matches || document.hidden || !onScreen) {
         video.pause();
-        video.currentTime = 0;
+        if (motion.matches) video.currentTime = 0;
         return;
       }
       video.muted = true;
       void video.play().catch(() => {});
     };
-    sync();
+
+    // Only play while the hero is on screen; pause when it scrolls away
+    // or when the tab is in the background.
+    new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        sync();
+      },
+      { threshold: 0.2 },
+    ).observe(video);
+
     motion.addEventListener("change", sync);
+    document.addEventListener("visibilitychange", sync);
+    sync();
   }
 </script>
