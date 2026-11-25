@@ -40,13 +40,13 @@ About, Features, and Download in the header jump to `#about`, `#features`, and `
 
 ## Hero media
 
-The hero clip lives in `src/assets/lob.mp4` and is committed in its web-ready form: H.264, 2560×1562, no audio, fast-start. Do not commit the 8K master recording; it is far too heavy for the page and is usually HEVC, which many browsers cannot decode.
+The hero clip lives in `src/assets/lob.mp4` and is committed in its web-ready form: H.264, 2560×1560, no audio, fast-start. Do not commit the 8K master recording; it is far too heavy for the page and is usually HEVC, which many browsers cannot decode.
 
-Re-encode a new master before committing it:
+The 8K export has a thin black frame around the image (2px on the left and right, 5–6px on the top and bottom). The crop below removes it. Adjust those values if a future master is framed differently:
 
 ```bash
 ffmpeg -i master.mp4 \
-  -vf "scale=2560:-2:flags=lanczos,format=yuv420p" \
+  -vf "crop=7074:4308:2:6,scale=2560:1560:flags=lanczos,format=yuv420p" \
   -c:v libx264 -preset slow -crf 20 -profile:v high -level 5.1 \
   -g 60 -keyint_min 30 -sc_threshold 0 \
   -movflags +faststart -an -map_metadata -1 \
@@ -57,7 +57,7 @@ Phones get the smaller `src/assets/lob-1280.mp4`; the hero script chooses betwee
 
 ```bash
 ffmpeg -i master.mp4 \
-  -vf "scale=1280:-2:flags=lanczos,format=yuv420p" \
+  -vf "crop=7074:4308:2:6,scale=1280:780:flags=lanczos,format=yuv420p" \
   -c:v libx264 -preset slow -crf 23 -profile:v high -level 4.0 \
   -g 60 -keyint_min 30 -sc_threshold 0 \
   -movflags +faststart -an -map_metadata -1 \
@@ -67,9 +67,9 @@ ffmpeg -i master.mp4 \
 Then regenerate the poster from the first frame so it matches the clip:
 
 ```bash
-ffmpeg -ss 0.1 -i src/assets/lob.mp4 -frames:v 1 \
-  -vf "scale=2560:-2:flags=lanczos" -c:v libwebp -quality 80 \
-  -y src/assets/lob-poster.webp
+ffmpeg -ss 0.1 -i master.mp4 -frames:v 1 \
+  -vf "crop=7074:4308:2:6,scale=2560:1560:flags=lanczos" \
+  -c:v libwebp -quality 80 -y src/assets/lob-poster.webp
 ```
 
 Keep the poster and video dimensions in sync; the video element uses the poster's dimensions to reserve space and avoid layout shift.
