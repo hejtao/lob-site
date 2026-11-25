@@ -57,13 +57,17 @@ const t = useTranslations(locale);
     // Safari does not always honour the media attribute and would send the
     // full-size clip to phones (or the phone clip to the desktop).
     const smallScreen = window.matchMedia("(max-width: 767px)");
-    const preferredSrc = smallScreen.matches ? video.dataset.srcMobile : video.dataset.src;
-    if (preferredSrc && video.getAttribute("src") !== preferredSrc) {
-      video.src = preferredSrc;
-      video.load();
-    }
+    const desktopSrc = video.dataset.src ?? "";
+    const mobileSrc = video.dataset.srcMobile ?? "";
+    const pickSource = () =>
+      (smallScreen.matches ? mobileSrc || desktopSrc : desktopSrc) || desktopSrc;
 
-    // Give the video whole-pixel dimensions. Safari composites video in its
+    let source = video.getAttribute("src") || desktopSrc;
+    let onScreen = true;
+    let autoplayBlocked = false;
+    let fallbackTried = false;
+
+    // Keep the video on whole-pixel dimensions. Safari composites video in its
     // own layer, and a fractional height can expose the layer's black edge
     // while the page is scrolling.
     const frame = video.parentElement;
@@ -85,7 +89,17 @@ const t = useTranslations(locale);
     }
     window.addEventListener("resize", fitVideo);
 
-    let onScreen = true;
+    const startPlayback = () => {
+      video.muted = true;
+      const attempt = video.play();
+      if (attempt && typeof attempt.catch === "function") {
+        void attempt.catch(() => {
+          // Autoplay is refused (iOS Low Power Mode, strict browser settings).
+          // The poster stays up until the visitor interacts with the page.
+          autoplayBlocked = true;
+        });
+      }
+    };
 
     const sync = () => {
       if (motion.matches || document.hidden || !onScreen) {
@@ -93,9 +107,28 @@ const t = useTranslations(locale);
         if (motion.matches) video.currentTime = 0;
         return;
       }
-      video.muted = true;
-      void video.play().catch(() => {});
+      startPlayback();
     };
+
+    const setSource = (next: string, retrying = false) => {
+      if (!next || next === source) return;
+      if (!retrying) fallbackTried = false;
+      source = next;
+      video.src = next;
+      video.load();
+      sync();
+    };
+
+    // The mobile clip is optional: fall back to the full-size file if it is
+    // missing, and vice versa if the desktop file cannot be played. Do not
+    // bounce between the two when both are broken.
+    video.addEventListener("error", () => {
+      if (fallbackTried) return;
+      const fallback = source === mobileSrc ? desktopSrc : mobileSrc;
+      if (!fallback || fallback === source) return;
+      fallbackTried = true;
+      setSource(fallback, true);
+    });
 
     // Only play while the hero is on screen; pause when it scrolls away
     // or when the tab is in the background.
@@ -109,7 +142,24 @@ const t = useTranslations(locale);
 
     motion.addEventListener("change", sync);
     document.addEventListener("visibilitychange", sync);
-    sync();
+    smallScreen.addEventListener("change", () => setSource(pickSource()));
+
+    // A first user interaction is enough for most browsers to allow muted
+    // playback after they refused it on load.
+    const retryPlayback = () => {
+      if (!autoplayBlocked || motion.matches || document.hidden || !onScreen) return;
+      autoplayBlocked = false;
+      startPlayback();
+    };
+    window.addEventListener("pointerdown", retryPlayback, { passive: true });
+    window.addEventListener("keydown", retryPlayback);
+
+    const preferred = pickSource();
+    if (preferred && preferred !== source) {
+      setSource(preferred);
+    } else {
+      sync();
+    }
   }
 </script>
 

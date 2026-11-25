@@ -40,26 +40,30 @@ About, Features, and Download in the header jump to `#about`, `#features`, and `
 
 ## Hero media
 
-The hero clip lives in `src/assets/lob.mp4` and is committed in its web-ready form: H.264, 2560×1560, no audio, fast-start. Do not commit the 8K master recording; it is far too heavy for the page and is usually HEVC, which many browsers cannot decode.
+`src/assets/lob.mp4` and `src/assets/lob-1280.mp4` are committed in their web-ready form: H.264 High profile, yuv420p, no audio, fast-start (`moov` before `mdat`). Do not commit the master recording: it is 7078×4320 HEVC with an AAC track, far too heavy for the page, and Chrome, Firefox and Edge cannot play it.
 
-The 8K export has a thin black frame around the image (2px on the left and right, 5–6px on the top and bottom). The crop below removes it. Adjust those values if a future master is framed differently:
+The hero script gives phones (≤767px) `lob-1280.mp4` and everything wider `lob.mp4`, so decode and download stay cheap on a phone. Nothing is fetched until the clip is on screen, and playback pauses when the tab is hidden, when the hero scrolls away, or when the visitor asked for reduced motion.
+
+The master has a 1px black line along its top and bottom edge. Cropping `7078:4316:0:2` drops the line (and one extra row, to keep the even height that yuv420p needs). Adjust the crop if a future recording is framed differently:
 
 ```bash
 ffmpeg -i master.mp4 \
-  -vf "crop=7074:4308:2:6,scale=2560:1560:flags=lanczos,format=yuv420p" \
+  -vf "crop=7078:4316:0:2,scale=2560:1560:flags=lanczos,format=yuv420p" \
   -c:v libx264 -preset slow -crf 20 -profile:v high -level 5.1 \
   -g 60 -keyint_min 30 -sc_threshold 0 \
+  -colorspace bt709 -color_primaries bt709 -color_trc bt709 \
   -movflags +faststart -an -map_metadata -1 \
   src/assets/lob.mp4
 ```
 
-Phones get the smaller `src/assets/lob-1280.mp4`; the hero script chooses between the two files from the viewport width. Regenerate it as well:
+The phone clip is the same footage at 1280×780:
 
 ```bash
 ffmpeg -i master.mp4 \
-  -vf "crop=7074:4308:2:6,scale=1280:780:flags=lanczos,format=yuv420p" \
+  -vf "crop=7078:4316:0:2,scale=1280:780:flags=lanczos,format=yuv420p" \
   -c:v libx264 -preset slow -crf 23 -profile:v high -level 4.0 \
   -g 60 -keyint_min 30 -sc_threshold 0 \
+  -colorspace bt709 -color_primaries bt709 -color_trc bt709 \
   -movflags +faststart -an -map_metadata -1 \
   src/assets/lob-1280.mp4
 ```
@@ -68,11 +72,11 @@ Then regenerate the poster from the first frame so it matches the clip:
 
 ```bash
 ffmpeg -ss 0.1 -i master.mp4 -frames:v 1 \
-  -vf "crop=7074:4308:2:6,scale=2560:1560:flags=lanczos" \
+  -vf "crop=7078:4316:0:2,scale=2560:1560:flags=lanczos" \
   -c:v libwebp -quality 80 -y src/assets/lob-poster.webp
 ```
 
-Keep the poster and video dimensions in sync; the video element uses the poster's dimensions to reserve space and avoid layout shift.
+`-an` keeps the clip silent: the hero is muted anyway, and a stray audio track only makes autoplay less reliable. `-movflags +faststart` lets the browser start decoding before the whole file has arrived. Keep the poster and video dimensions in sync; the `<video>` element uses the poster's width and height to reserve space and avoid layout shift.
 
 ## Download URLs
 
